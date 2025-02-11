@@ -111,7 +111,7 @@ PING 10.1.1.11 (10.1.1.11) 56(84) bytes of data.
 ```
 🦈 Capture ICMP
 
-[ping1.pcap](./captures/ping1.pcap)
+[ping1.pcap](/ping1.pcap)
 
 🌞 Nommez les machines
 
@@ -273,4 +273,7 @@ rtt min/avg/max/mdev = 0.803/1.596/2.389/0.793 ms
 ```
 🦈 Capture ARP
 
-[arp_1.pcap](./captures/arp_1.pcap)
+[arp_1.pcap](/arp_1.pcap)
+
+# PART II: DHCP Service
+
