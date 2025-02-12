@@ -374,3 +374,48 @@ nameserver 1.1.1.1
 [dhcp_1.pcap](/dhcp_1.pcap)
 
 # Part III : Scan me if you can
+## 1. Network scan
+
+🌞 Effectuer un scan ARP depuis la machine attaquante node1.tp1.my
+
+```bash
+[toto@node1 ~]$ sudo nmap -sn -PR 10.1.1.0/24
+Starting Nmap 7.92 ( https://nmap.org ) at 2025-02-11 16:31 CET
+Nmap scan report for 10.1.1.1
+Host is up (0.00068s latency).
+MAC Address: 0A:00:27:00:00:03 (Unknown)
+Nmap scan report for node2.tp1.my (10.1.1.12)
+Host is up (0.00050s latency).
+MAC Address: 08:00:27:93:02:66 (Oracle VirtualBox virtual NIC)
+Nmap scan report for dhcp.tp1.my (10.1.1.253)
+Host is up (0.00053s latency).
+MAC Address: 08:00:27:E0:92:42 (Oracle VirtualBox virtual NIC)
+Nmap scan report for 10.1.1.100
+Host is up.
+Nmap done: 256 IP addresses (4 hosts up) scanned in 1.96 seconds
+```
+[nmap_1.pcap](/nmap_1.pcap)
+
+🌞 Effectuer un scan de service et d'OS depuis la machine attaquante node1.tp1.my
+
+```bash
+[toto@node1 ~]$ sudo nmap -p 22,67,68 -sV -O dhcp.tp1.my
+[sudo] password for toto:
+Starting Nmap 7.92 ( https://nmap.org ) at 2025-02-11 16:40 CET
+Nmap scan report for dhcp.tp1.my (10.1.1.253)
+Host is up (0.0014s latency).
+
+PORT   STATE    SERVICE VERSION
+22/tcp open     ssh     OpenSSH 8.7 (protocol 2.0)
+67/tcp filtered dhcps
+68/tcp filtered dhcpc
+MAC Address: 08:00:27:E0:92:42 (Oracle VirtualBox virtual NIC)
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Aggressive OS guesses: Linux 2.6.32 (94%), Linux 3.10 - 4.11 (94%), Linux 3.2 - 4.9 (94%), Linux 3.4 - 3.10 (94%), Linux 4.15 - 5.6 (94%), Linux 5.1 (94%), Linux 2.6.32 - 3.10 (93%), Linux 2.6.32 - 3.13 (93%), Linux 3.10 (93%), Linux 5.0 - 5.4 (93%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 1 hop
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 4.56 seconds
+```
+[nmap_2.pcap](/nmap_2.pcap)
