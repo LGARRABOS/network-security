@@ -543,3 +543,17 @@ Finished sending 1 packets.
 [arp_mitm_1.pcap](/arp_mitm_1.pcap)
 
 # Part V : Play with DHCP
+## 1. DHCP starvation
+
+🌞 Ecrire un script Scapy pour mettre en place un DHCP Starvation
+
+[dhcp_starvation.py](/dhcp_starvation.py)
+
+🌞 Afficher la liste des bails DHCP depuis dhcp.tp1.my
+   
+```bash
+   [toto@dhcp ~]$ grep "lease" /var/lib/dhcpd/dhcpd.leases | wc -l
+104
+```
+🦈 Capture DHCP Starvation
+
