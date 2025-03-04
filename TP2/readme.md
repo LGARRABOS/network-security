@@ -235,3 +235,110 @@ VPCS> ping 10.2.30.1
 
 🌞 Activer le DAI sur les switches
 
+Core1
+```shell
+
+arp access-list ARP
+permit ip host 10.2.10.1 mac host 00:50:79:66:68:03
+permit ip host 10.2.20.1 mac host 00:50:79:66:68:07
+permit ip host 10.2.10.2 mac host 00:50:79:66:68:06
+permit ip host 10.2.20.2 mac host 00:50:79:66:68:08
+permit ip host 10.2.30.1 mac host 00:50:79:66:68:09
+
+permit ip host 10.2.10.254 mac host ffff.ffff.ffff
+permit ip host 10.2.20.254 mac host ffff.ffff.ffff
+permit ip host 10.2.30.254 mac host ffff.ffff.ffff
+exit
+
+ip arp inspection filter ARP vlan 10,20,30
+
+interface ethernet 0/0
+no ip arp inspection trust
+
+interface ethernet 0/1
+no ip arp inspection trust
+
+interface ethernet 0/2
+no ip arp inspection trust
+```
+Switch1
+```shell
+
+arp access-list ARP
+permit ip host 10.2.10.1 mac host 00:50:79:66:68:03
+permit ip host 10.2.20.1 mac host 00:50:79:66:68:07
+permit ip host 10.2.10.2 mac host 00:50:79:66:68:06
+permit ip host 10.2.20.2 mac host 00:50:79:66:68:08
+permit ip host 10.2.30.1 mac host 00:50:79:66:68:09
+
+permit ip host 10.2.10.254 mac host ffff.ffff.ffff
+permit ip host 10.2.20.254 mac host ffff.ffff.ffff
+permit ip host 10.2.30.254 mac host ffff.ffff.ffff
+exit
+
+ip arp inspection filter ARP vlan 10,20,30
+
+interface ethernet 0/2
+no ip arp inspection trust
+```	
+Switch2
+```shell
+
+arp access-list ARP
+permit ip host 10.2.10.1 mac host 00:50:79:66:68:03
+permit ip host 10.2.20.1 mac host 00:50:79:66:68:07
+permit ip host 10.2.10.2 mac host 00:50:79:66:68:06
+permit ip host 10.2.20.2 mac host 00:50:79:66:68:08
+permit ip host 10.2.30.1 mac host 00:50:79:66:68:09
+
+permit ip host 10.2.10.254 mac host ffff.ffff.ffff
+permit ip host 10.2.20.254 mac host ffff.ffff.ffff
+permit ip host 10.2.30.254 mac host ffff.ffff.ffff
+exit
+
+ip arp inspection filter ARP vlan 10,20,30
+
+interface ethernet 0/1
+no ip arp inspection trust
+```
+
+🌞 Activer BPDUGuard sur vos switches
+
+Core1
+```shell
+enable
+configure terminal
+spanning-tree portfast bpduguard default
+
+interface ethernet 0/1
+ no spanning-tree bpduguard enable
+exit
+
+interface ethernet 0/2
+ no spanning-tree bpduguard enable
+exit
+
+interface ethernet 0/3
+ no spanning-tree bpduguard enable
+exit
+```
+Switch1
+```shell
+enable
+configure terminal
+spanning-tree portfast bpduguard default
+
+interface ethernet 0/2
+ no spanning-tree bpduguard enable
+exit
+```	
+Switch2
+```shell
+enable
+configure terminal
+spanning-tree portfast bpduguard default
+
+interface ethernet 0/1
+ no spanning-tree bpduguard enable
+exit
+```
