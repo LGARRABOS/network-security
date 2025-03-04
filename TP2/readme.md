@@ -153,7 +153,7 @@ no aaa new-model
 access1
 
 ```shell
-Switch(config) #do show running-config
+Switch(config)#do show running-config
 Building configuration...
 
 Current configuration : 920 bytes
@@ -202,7 +202,7 @@ no aaa new-model
 
 ```
 
-🌞 Ping !
+🌞 Ping 
 ```shell
 VPCS> ping 10.2.30.1
 
@@ -210,7 +210,7 @@ VPCS> ping 10.2.30.1
 84 bytes from 10.2.30.1 icmp_seq=2 ttl=63 time=14.322 ms
 84 bytes from 10.2.30.1 icmp_seq=3 ttl=63 time=19.818 ms
 ````
-🌞 rePing !
+🌞 rePing 
 ```shell
 VPCS> ping 8.8.8.8
 
@@ -341,4 +341,124 @@ spanning-tree portfast bpduguard default
 interface ethernet 0/1
  no spanning-tree bpduguard enable
 exit
+```
+🌞 La running-config des 4 équipements réseau
+
+Router
+```shell
+Router(config)#do show running-config
+Building configuration...
+
+Current configuration : 1680 bytes
+
+ Last configuration change at 12:51:43 UTC Tue Mar 4 2025
+
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+
+hostname Router
+
+boot-start-marker
+boot-end-marker
+
+
+no aaa new-model
+
+ip cef
+no ipv6 cef
+
+
+multilink bundle-name authenticated
+
+interface FastEthernet0/0
+ ip address 10.99.99.2 255.255.255.0
+ ip nat outside
+ duplex full
+
+interface FastEthernet1/0
+ no ip address
+ ip access-group 100 in
+ ip nat inside
+ duplex full
+
+interface FastEthernet1/0.1
+ ip nat inside
+
+interface FastEthernet1/0.2
+ ip nat inside
+
+interface FastEthernet1/0.3
+ ip nat inside
+
+interface FastEthernet1/0.3
+ ip nat inside
+
+interface FastEthernet1/0.10
+ encapsulation dot1Q 10
+ ip address 10.2.10.254 255.255.255.0
+ ip access-group 100 in
+ ip nat inside
+
+interface FastEthernet1/0.20
+ encapsulation dot1Q 20
+ ip address 10.2.20.254 255.255.255.0
+ ip access-group 100 in
+ ip nat inside
+
+interface FastEthernet1/0.30
+ encapsulation dot1Q 30
+ ip address 10.2.30.254 255.255.255.0
+ ip nat inside
+
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ duplex full
+
+ip nat inside source list 1 interface FastEthernet0/0 overload
+ duplex full
+
+ip nat inside source list 1 interface FastEthernet0/0 overload
+ip forward-protocol nd
+
+
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.99.99.0
+ip route 0.0.0.0 0.0.0.0 10.2.0.254
+ip route 0.0.0.0 0.0.0.0 10.99.99.10
+
+access-list 1 permit any
+access-list 1 permit 10.2.10.0 0.0.0.255
+access-list 1 permit 10.2.20.0 0.0.0.255
+access-list 1 permit 10.2.30.0 0.0.0.255
+access-list 100 deny   ip any 10.2.30.0 0.0.0.255
+access-list 100 permit ip any any
+
+control-plane
+
+line con 0
+ stopbits 1
+ ip route 0.0.0.0 0.0.0.0 10.99.99.0
+ip route 0.0.0.0 0.0.0.0 10.2.0.254
+ip route 0.0.0.0 0.0.0.0 10.99.99.10
+
+access-list 1 permit any
+access-list 1 permit 10.2.10.0 0.0.0.255
+access-list 1 permit 10.2.20.0 0.0.0.255
+access-list 1 permit 10.2.30.0 0.0.0.255
+access-list 100 deny   ip any 10.2.30.0 0.0.0.255
+access-list 100 permit ip any any
+
+control-plane
+
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+
+end
 ```
