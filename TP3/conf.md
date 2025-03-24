@@ -5,7 +5,7 @@ agrégat de lien LACP
 # Switch 1
 en
 conf t
-interface range ethernet 1/0 - 1
+interface range ethernet 0/0 - 1
 channel-group 1 mode active
 exit
 interface port-channel 1
@@ -20,7 +20,7 @@ do wr
 # Switch 2
 en
 conf t
-interface range ethernet 1/0 - 1
+interface range ethernet 0/0 - 1
 channel-group 1 mode passive
 exit
 interface port-channel 1
@@ -45,11 +45,11 @@ exit
 vlan 30
 name serveur
 exit
-interface range ethernet 1/2
+interface range ethernet 1/0
 switchport trunk encapsulation dot1q
 switchport mode trunk
 switchport trunk allowed vlan add 10,20,30
-interface range ethernet 0/1 - 3
+interface range ethernet 1/1 - 2
 switchport trunk encapsulation dot1q
 switchport mode trunk
 switchport trunk allowed vlan add 10,20,30
@@ -71,11 +71,11 @@ exit
 vlan 30
 name serveur
 exit
-interface range ethernet 1/2
+interface range ethernet 1/0
 switchport trunk encapsulation dot1q
 switchport mode trunk
 switchport trunk allowed vlan add 10,20,30
-interface range ethernet 0/1 - 3
+interface range ethernet 1/1 - 2
 switchport trunk encapsulation dot1q
 switchport mode trunk
 switchport trunk allowed vlan add 10,20,30
