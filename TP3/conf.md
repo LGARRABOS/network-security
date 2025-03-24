@@ -183,15 +183,15 @@ conf t
 vlan 30
 name serveur
 exit
-interface range ethernet0/0
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 10,20,30
 interface range ethernet0/2
 switchport trunk encapsulation dot1q
 switchport mode trunk
 switchport trunk allowed vlan add 10,20,30
-interface range ethernet0/1
+interface range ethernet0/3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 10,20,30
+interface range ethernet0/0
 switchport mode access
 switchport access vlan 30
 exit
