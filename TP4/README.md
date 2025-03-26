@@ -87,3 +87,62 @@ Connection to 10.3.30.253 closed.
        valid_lft forever preferred_lft forever
 [toto@localhost ~]$
 ```
+🌞 Serveur SSH
+    
+    ```bash
+    [toto@Bastion ~]$ ss -tuln | grep ':22'
+tcp   LISTEN 0      128          0.0.0.0:22        0.0.0.0:*
+tcp   LISTEN 0      128             [::]:22           [::]:*
+
+[toto@Bastion ~]$ systemctl status sshd
+● sshd.service - OpenSSH server daemon
+     Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2025-03-26 11:18:29 CET; 2min 50s ago
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+   Main PID: 704 (sshd)
+      Tasks: 1 (limit: 4656)
+     Memory: 6.4M
+        CPU: 124ms
+     CGroup: /system.slice/sshd.service
+             └─704 "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups"
+
+Mar 26 11:18:28 Bastion systemd[1]: Starting OpenSSH server daemon...
+Mar 26 11:18:29 Bastion sshd[704]: Server listening on 0.0.0.0 port 22.
+Mar 26 11:18:29 Bastion sshd[704]: Server listening on :: port 22.
+Mar 26 11:18:29 Bastion systemd[1]: Started OpenSSH server daemon.
+Mar 26 11:20:25 Bastion sshd[1210]: Accepted password for toto from 10.3.30.1 port 53439 ssh2
+Mar 26 11:20:25 Bastion sshd[1210]: pam_unix(sshd:session): session opened for user toto(uid=1000) by toto(uid=0)
+
+[toto@Bastion ~]$ sudo firewall-cmd --list-services
+[sudo] password for toto:
+cockpit dhcpv6-client ssh
+```
+🌞 Connexion SSH
+    
+```bash
+PS C:\Users\garra> ssh toto@10.3.30.100
+Last login: Wed Mar 26 11:20:25 2025 from 10.3.30.1
+[toto@Bastion ~]$
+```
+🌞 Fichier SSH config
+    
+```bash
+Host bastion
+  Hostname 10.3.30.100
+  User toto
+  IdentityFile C:\Users\garra\.ssh\id_ed25519
+```
+
+🌞 Proof !
+
+```bash
+PS C:\Users\garra> ssh bastion
+The authenticity of host '10.3.30.100 (10.3.30.100)' can't be established.
+ED25519 key fingerprint is SHA256:O6Ws9QyCTYBJAw6a+bCtGZYhfUh94rU17ZeP8zVDe/8.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.3.30.100' (ED25519) to the list of known hosts.
+Last login: Wed Mar 26 11:35:56 2025 from 10.3.30.1
+[toto@Bastion ~]$
+```
