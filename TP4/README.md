@@ -89,8 +89,8 @@ Connection to 10.3.30.253 closed.
 ```
 🌞 Serveur SSH
     
-    ```bash
-    [toto@Bastion ~]$ ss -tuln | grep ':22'
+```bash
+[toto@Bastion ~]$ ss -tuln | grep ':22'
 tcp   LISTEN 0      128          0.0.0.0:22        0.0.0.0:*
 tcp   LISTEN 0      128             [::]:22           [::]:*
 
@@ -146,3 +146,90 @@ Warning: Permanently added '10.3.30.100' (ED25519) to the list of known hosts.
 Last login: Wed Mar 26 11:35:56 2025 from 10.3.30.1
 [toto@Bastion ~]$
 ```
+
+🌞 Mettre à jour la clé publique déposées sur les routeurs
+    
+```bash
+en
+conf t
+crypto key zeroize rsa
+crypto key generate rsa modulus 2048
+ip ssh version 2
+ip ssh pubkey-chain
+username toto
+key-string
+
+```
+
+## Part III : SNMP
+### 1. Activer le serveur SNMP
+
+🌞 Activer le service SNMP
+
+```bash
+enable
+configure terminal
+snmp-server community tp4 RO
+do wr
+```
+
+🌞 Vérifier l'état du service SNMP
+
+```bash
+R1#show snmp community
+
+Community name: ILMI
+Community Index: ILMI
+Community SecurityName: ILMI
+storage-type: read-only  active
+
+
+Community name: tp4
+Community Index: tp4
+Community SecurityName: tp4
+storage-type: nonvolatile        active
+```
+### 2. Requêter SNMP
+
+🌞 Sur votre bastion
+
+```bash
+[toto@Bastion ~]$ snmpwalk -v
+snmpwalk: option requires an argument -- 'v'
+USAGE: snmpwalk [OPTIONS] AGENT [OID]
+
+  Version:  5.9.1
+  Web:      http://www.net-snmp.org/
+  Email:    net-snmp-coders@lists.sourceforge.net
+```
+```bash	
+[toto@Bastion ~]$ snmpwalk -v2c -c tp4 10.3.30.252
+SNMPv2-MIB::sysDescr.0 = STRING: Cisco IOS Software, 7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.2(4)S6, RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2014 by Cisco Systems, Inc.
+Compiled Fri 08-Aug-14 04:05 by prod_rel_team
+SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.9.1.222
+DISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (97920) 0:16:19.20
+SNMPv2-MIB::sysContact.0 = STRING:
+SNMPv2-MIB::sysName.0 = STRING: R1.r1
+SNMPv2-MIB::sysLocation.0 = STRING:
+SNMPv2-MIB::sysServices.0 = INTEGER: 78
+SNMPv2-MIB::sysORLastChange.0 = Timeticks: (0) 0:00:00.00
+IF-MIB::ifNumber.0 = INTEGER: 6
+IF-MIB::ifIndex.1 = INTEGER: 1
+IF-MIB::ifIndex.2 = INTEGER: 2
+IF-MIB::ifIndex.3 = INTEGER: 3
+IF-MIB::ifIndex.4 = INTEGER: 4
+```
+🌞 Trouvez une commande
+
+```bash	
+[toto@Bastion ~]$ snmpwalk -v2c -c tp4 10.3.30.252 1.3.6.1.2.1.2.2.1.2
+IF-MIB::ifDescr.1 = STRING: FastEthernet0/0
+IF-MIB::ifDescr.2 = STRING: FastEthernet1/0
+IF-MIB::ifDescr.3 = STRING: Null0
+IF-MIB::ifDescr.4 = STRING: FastEthernet1/0.10
+IF-MIB::ifDescr.5 = STRING: FastEthernet1/0.20
+IF-MIB::ifDescr.6 = STRING: FastEthernet1/0.30
+```
+[snmp.pcap](/snmp.pcap)
