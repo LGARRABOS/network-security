@@ -233,3 +233,7 @@ IF-MIB::ifDescr.5 = STRING: FastEthernet1/0.20
 IF-MIB::ifDescr.6 = STRING: FastEthernet1/0.30
 ```
 [snmp.pcap](/snmp.pcap)
+
+### 3. Un peu de visualisation
+
+🌞 Installer Netdata sur votre bastion
